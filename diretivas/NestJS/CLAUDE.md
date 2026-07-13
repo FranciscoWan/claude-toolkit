@@ -80,6 +80,81 @@ Toda feature **deve** implementar as três camadas abaixo. Nenhuma pode ser omit
 
 ---
 
+## Entities
+
+### Classes base (herdar sempre que aplicável)
+| Classe | Quando usar |
+|---|---|
+| `BaseEntity` | Toda entidade com PK UUID auto-gerada + `criadoEm` + `atualizadoEm` |
+| `BaseEntityWithSoftDelete` | Idem + suporte a soft delete via `deletadoEm` (`@DeleteDateColumn`) |
+
+Entidades com PK composta ou PK manual (ex: tabelas de vínculo) **não herdam** nenhuma base.
+
+### Tipos de entidade
+
+**Entidade principal** — representa um agregado de domínio, herda `BaseEntity` ou `BaseEntityWithSoftDelete`:
+```ts
+@Entity({ name: 'pessoas' })
+export class Pessoa extends BaseEntityWithSoftDelete { ... }
+```
+
+**Entidade de extensão (`ext_*`)** — adiciona papel/dados extras a uma entidade principal via `@OneToOne` com PK compartilhada (não usa base):
+```ts
+@Entity({ name: 'ext_cliente' })
+export class ExtCliente {
+  @PrimaryColumn({ name: 'organizacao_id', type: 'uuid' })
+  organizacaoId: string;
+
+  @OneToOne(() => Organizacao)
+  @JoinColumn({ name: 'organizacao_id' })
+  organizacao: Organizacao;
+}
+```
+
+**Entidade de vínculo (N:N explícita)** — PK composta, sem herança de base, com colunas extras se necessário:
+```ts
+@Entity({ name: 'organizacao_pessoa' })
+export class OrganizacaoPessoa {
+  @PrimaryColumn({ name: 'organizacao_id', type: 'uuid' })
+  organizacaoId: string;
+
+  @PrimaryColumn({ name: 'pessoa_id', type: 'uuid' })
+  pessoaId: string;
+
+  @ManyToOne(() => Organizacao, ...)
+  @JoinColumn({ name: 'organizacao_id', referencedColumnName: 'pessoaJuridicaId' })
+  organizacao: Organizacao;
+}
+```
+
+**Entidade de papel/enum** — PK composta sem base, enum definido no mesmo arquivo:
+```ts
+export enum OrganizacaoPapeis { CLIENTE = 'cliente', ... }
+
+@Entity({ name: 'organizacao_papel' })
+export class OrganizacaoPapel {
+  @PrimaryColumn({ name: 'organizacao_id', type: 'uuid' }) organizacaoId: string;
+  @PrimaryColumn({ type: 'varchar' }) papel: string;
+}
+```
+
+### Decorators e convenções
+- `@Column({ name: 'snake_case' })` sempre que o nome da propriedade TS difere da coluna
+- `@Column({ nullable: true })` para campos opcionais — nunca `?` sem o decorator correspondente
+- `@Column({ unique: true })` para campos com constraint de unicidade
+- `@Check(...)` para validações a nível de banco (ex: formato CPF/CNPJ)
+- Hooks `@BeforeInsert()` / `@BeforeUpdate()` para normalização de dados antes de persistir
+- Relacionamentos sempre com o lado inverso declarado (bidirecional quando necessário para queries)
+- `@JoinColumn` obrigatório no lado que possui a FK (`@OneToOne`, `@ManyToOne`)
+
+### Proibido em entities
+- Lógica de negócio além de normalização de dados (`@BeforeInsert`/`@BeforeUpdate`)
+- Métodos públicos que não sejam hooks do TypeORM
+- Importar Services ou Repositories
+- Expor diretamente na resposta HTTP
+
+---
+
 ## SOLID (aplicado)
 
 | | |
@@ -124,7 +199,12 @@ Toda feature **deve** implementar as três camadas abaixo. Nenhuma pode ser omit
 ---
 
 ## Proibido
-- `any` · Lógica de negócio em controller · Acesso ao banco no service
-- Expor entidade na resposta HTTP · `synchronize: true` em produção
-- Query sem tipagem · Módulo importando outro módulo de feature diretamente
-- Variáveis de ambiente acessadas fora de `config/` · Exceptions genéricas sem contexto
+- `any`
+- Lógica de negócio em controller
+- Acesso ao banco no service
+- Expor entidade na resposta HTTP
+- `synchronize: true` em produção
+- Query sem tipagem
+- Módulo importando outro módulo de feature diretamente
+- Variáveis de ambiente fora de `config/`
+- Exceptions genéricas sem contexto
