@@ -19,7 +19,7 @@ Antes de gerar qualquer arquivo:
 1. Leia todos os arquivos fornecidos.
 2. Classifique cada arquivo em uma das categorias: `produto/roadmap`, `infraestrutura geral`, `serviço específico`, `dependência de serviço`, `banco de dados`, `segurança`, `API externa`.
 3. Identifique duplicatas (mesma informação em arquivos diferentes).
-4. Identifique referências circulares (A → B → A) e links que saltam níveis hierárquicos.
+4. Identifique links que saltam níveis hierárquicos.
 5. Para cada serviço/integração encontrado, liste quais dependências existem (credenciais, endpoints, webhooks, fluxos, erros).
 6. Apresente um resumo da análise e aguarde aprovação antes de continuar.
 
