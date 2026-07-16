@@ -31,76 +31,109 @@ Reorganize o vault exatamente nesta estrutura. Adapte os arquivos internos ao co
 
 **Regra de nomenclatura dos índices de serviço:**
 - O `_index.md` de cada serviço/integração deve ser nomeado como `[nome-do-servico]_index.md`
+- O index serve como ponto de entrada para aquela documentação. [nome-do-projeto]-index.md -> conecta com todos os [nome-do-servico]_index.md -> que por sua vez só se conecta com as documentações de sua pasta.
 - Exemplos: `stripe_index.md`, `sendgrid_index.md`, `aws-s3_index.md`
-- Todos os demais `_index.md` (pastas que não são de serviço) seguem o nome padrão `_index.md`
+- Todos as demais pastas que não são de serviço seguem o nome padrão [nome-da-funcionalidade]
 
 ```
 [nome-do-vault]/
-├── 00-index.md
+├── [nome-do-projeto]-index.md
 │
 ├── 01-product/
-│   ├── _index.md
+│   ├── [nome-do-servico]_index.md
 │   ├── roadmap.md
 │   ├── features/
-│   │   ├── _index.md
-│   │   └── [uma feature por arquivo]
+│   │   ├── [nome-do-servico]_index.md
+│   │   ├── [feature-a].md
+│   │   └── [feature-b].md
 │   └── decisions/
-│       └── adr-001-[tema].md
+        ├── [nome-do-servico]_index.md
+│       ├── adr-001-[tema].md
+│       ├── adr-002-[tema].md
+│       └── adr-003-[tema].md
 │
-└── 02-infrastructure/
-    ├── _index.md
-    │
-    ├── [serviços-ou-integrações]/        ← adapte o nome da pasta ao domínio
-    │   ├── _index.md
-    │   ├── [servico-a]/
-    │   │   ├── [servico-a]_index.md
-    │   │   ├── credentials.md            ← se o serviço exige autenticação
-    │   │   ├── endpoints.md              ← se o serviço expõe rotas
-    │   │   ├── webhooks.md               ← se o serviço envia eventos
-    │   │   ├── [fluxo-principal].md      ← ex: payment-flows.md, sync-flows.md
-    │   │   └── errors.md
-    │   └── [servico-b]/
-    │       └── [mesma estrutura]
-    │
+├── 02-backend/
+│   ├── [nome-do-servico]_index.md
+│   ├── credentials.md
+│   ├── endpoints.md
+│   ├── errors.md
+│   ├── spec-legado.md
+│   │
+│   ├── flows/
+        ├── [nome-do-servico]_index.md
+│   │   ├── [fluxo-principal].md
+│   │   ├── [fluxo-a].md
+│   │   └── [fluxo-b].md
+│   │
+│   ├── features/
+        ├── [nome-do-servico]_index.md
+│   │   ├── [feature-a].md
+│   │   ├── [feature-b].md
+│   │   └── [feature-c].md
+│   │
+│   ├── bugfixes/
+        ├── [nome-do-servico]_index.md
+│   │   ├── [bugfix-a]-[yyyy-mm-dd].md
+│   │   └── [bugfix-b]-[yyyy-mm-dd].md
+│   │
+│   └── backfills/
+        ├── [nome-do-servico]_index.md
+│       └── [backfill-a]-[yyyy-mm-dd].md
+│
+├── 03-frontend/
+│   ├── [nome-do-servico]_index.md
+│   ├── endpoints.md
+│   ├── paleta-cores.md
+│   │
+│   ├── features/
+        ├── [nome-do-servico]_index.md
+│   │   ├── [feature-a].md
+│   │   ├── [feature-b].md
+│   │   └── [feature-c].md
+│   │
+│   └── bugfixes/
+        ├── [nome-do-servico]_index.md
+│       ├── [bugfix-a]-[yyyy-mm-dd].md
+│       └── [bugfix-b]-[yyyy-mm-dd].md
+│
+└── 04-infrastructure/
+    ├── [nome-do-servico]_index.md
     ├── database/
-    │   ├── _index.md
+    │   ├── [nome-do-servico]_index.md
     │   ├── schema.md
     │   └── migrations.md
-    │
     ├── security/
-    │   ├── _index.md
+    │   ├── [nome-do-servico]_index.md
     │   └── authentication.md
-    │
     └── external-apis/
-        ├── _index.md
-        └── [uma api por arquivo]
+        ├── [nome-do-servico]_index.md
+        └── [api-externa].md
 ```
 
 ---
 
 ### FASE 3: REGRAS DE LINKS
 
-**Regra geral:** cada arquivo linka apenas para o seu pai direto — sem exceções.
+**Regra geral:** cada arquivo linka para seu pai direto, ex: [nome-do-projeto]-index.md é o ponto de entrada PAI, product_index.md é vinculado com o PAI, roadmap.md tem vínculo com product_index.md, features_index.md é vinculado com product_index.md, [feature-a].md e [feature-b].md é vinculado com features_index.md e caso tenham relação ou dependam uma da outra, podem ter relação entre si também. O link é bidirecional. 
 
 **Arquivos folha** (credentials, endpoints, webhooks, errors, features, decisions, schema, migrations, authentication, roadmap):
-- Linkam **somente** para o `_index.md` pai imediato
-- **Não** linkam para `00-index.md`
-- **Não** linkam para arquivos irmãos (mesmo nível)
+- Linkam **somente** para o `[nome-do-servico]_index.md` pai imediato
+- **Não** linkam para `[nome-do-projeto]-index.md`
+- **Só** linkam para arquivos irmãos (mesmo nível) se forem dependentes
 - **Não** linkam para arquivos de outros ramos da hierarquia
 
-**Arquivos `_index.md`:**
+**Arquivos `[nome-do-servico]_index.md`:**
 - Linkam para os **filhos diretos** da própria pasta
-- Linkam para o **pai direto** (o `_index.md` um nível acima)
-- O `_index.md` da raiz de cada seção de topo linka para `00-index.md`
+- Linkam para o **pai direto** (o `[nome-do-servico]_index.md` um nível acima)
+- O `[nome-do-servico]_index.md` da raiz de cada seção de topo linka para `[nome-do-projeto]-index.md`
 
-**`00-index.md`:**
-- Linka para as seções de topo (`01-product/_index`, `02-infrastructure/_index`)
+**`[nome-do-projeto]-index.md`:**
+- Linka para as seções de topo (`01-product/product_index`, `02-infrastructure/infrastructure_index`)
 - Não tem pai
 
 **PROIBIDO em qualquer arquivo:**
 - Linkar para outro ramo (ex: `features/` linkando para `services/`)
 - Linkar saltando mais de um nível hierárquico
-- Links circulares em qualquer direção
 - Referências cruzadas entre serviços diferentes (ex: `stripe/webhooks.md` linkando para `sendgrid_index.md`)
 - Wikilinks dentro do corpo do texto que violem as regras acima — nesses casos, usar caminho em texto puro (ex: `02-infrastructure/services/servico/arquivo.md`)
 
