@@ -6,217 +6,311 @@ Use este prompt para gerar um vault Obsidian bem organizado a partir de uma base
 
 ## PROMPT
 
-Você receberá o conteúdo completo do meu vault Obsidian chamado "[nome-do-vault]". Ele documenta um projeto de software [descrição em uma linha do projeto]. O vault está desorganizado: arquivos se referenciam circularmente, links são excessivos e não existe hierarquia clara entre os temas.
+Você receberá o conteúdo completo do meu vault Obsidian para o projeto **[nome-do-projeto]**.
+[Descrição em uma linha do projeto: o que é, stack principal, objetivo central.]
 
-Sua tarefa é reorganizar completamente esse vault. Siga as fases abaixo na ordem exata.
+Sua tarefa é gerar um vault Obsidian completamente organizado seguindo a arquitetura abaixo.
+Execute as fases na ordem exata. Não gere arquivos antes da aprovação da Fase 1.
 
 ---
 
-### FASE 1: ANÁLISE
+### FASE 1 — ANÁLISE
 
-Antes de gerar qualquer arquivo:
+Antes de qualquer geração:
 
 1. Leia todos os arquivos fornecidos.
-2. Classifique cada arquivo em uma das categorias: `produto/roadmap`, `infraestrutura geral`, `serviço específico`, `dependência de serviço`, `banco de dados`, `segurança`, `API externa`.
+2. Identifique: nome do projeto, serviços (backend/frontend), APIs externas, features documentadas, bugs/bugfixes, fluxos técnicos, decisões arquiteturais (ADRs), schema de banco.
 3. Identifique duplicatas (mesma informação em arquivos diferentes).
-4. Identifique links que saltam níveis hierárquicos.
-5. Para cada serviço/integração encontrado, liste quais dependências existem (credenciais, endpoints, webhooks, fluxos, erros).
-6. Apresente um resumo da análise e aguarde aprovação antes de continuar.
+4. Identifique qual informação é "humana/narrativa" (vai para o doc) versus "técnica de navegação" (vai para o vault).
+5. Apresente:
+   - Lista de arquivos classificados por seção (product / backend / frontend / infrastructure)
+   - Duplicatas encontradas e onde serão consolidadas
+   - Estrutura de pastas proposta (árvore)
+6. **Aguarde aprovação antes de continuar.**
 
 ---
 
-### FASE 2: HIERARQUIA OBRIGATÓRIA
+### FASE 2 — ESTRUTURA OBRIGATÓRIA
 
-Reorganize o vault exatamente nesta estrutura. Adapte os arquivos internos ao conteúdo real, mas mantenha os níveis e a lógica de parentesco.
-
-**Regra de nomenclatura dos índices de serviço:**
-- O `_index.md` de cada serviço/integração deve ser nomeado como `[nome-do-servico]_index.md`
-- O index serve como ponto de entrada para aquela documentação. [nome-do-projeto]-index.md -> conecta com todos os [nome-do-servico]_index.md -> que por sua vez só se conecta com as documentações de sua pasta.
-- Exemplos: `stripe_index.md`, `sendgrid_index.md`, `aws-s3_index.md`
-- Todos as demais pastas que não são de serviço seguem o nome padrão [nome-da-funcionalidade]
+Gere exatamente esta estrutura. Adapte apenas os arquivos folha ao conteúdo real do projeto.
 
 ```
-[nome-do-vault]/
-├── [nome-do-projeto]-index.md
+[nome-do-projeto]/
+│
+├── [nome-do-projeto]-doc.md           ← documentação narrativa (visão geral, ADRs em prosa, arquitetura)
+├── [nome-do-projeto]-index.md         ← índice do vault (raiz, sem pai)
 │
 ├── 01-product/
-│   ├── [nome-do-servico]_index.md
+│   ├── product_index.md
 │   ├── roadmap.md
 │   ├── features/
-│   │   ├── [nome-do-servico]_index.md
+│   │   ├── features_index.md
 │   │   ├── [feature-a].md
 │   │   └── [feature-b].md
 │   └── decisions/
-        ├── [nome-do-servico]_index.md
+│       ├── decisions_index.md
 │       ├── adr-001-[tema].md
-│       ├── adr-002-[tema].md
-│       └── adr-003-[tema].md
+│       └── adr-002-[tema].md
 │
 ├── 02-backend/
-│   ├── [nome-do-servico]_index.md
+│   ├── [nome-do-projeto]-be_index.md  ← índice do serviço backend
 │   ├── credentials.md
 │   ├── endpoints.md
 │   ├── errors.md
-│   ├── spec-legado.md
-│   │
+│   ├── spec-legado.md                 ← só se houver legado; omitir caso contrário
 │   ├── flows/
-        ├── [nome-do-servico]_index.md
+│   │   ├── flows_index.md
 │   │   ├── [fluxo-principal].md
-│   │   ├── [fluxo-a].md
 │   │   └── [fluxo-b].md
-│   │
 │   ├── features/
-        ├── [nome-do-servico]_index.md
+│   │   ├── features_index.md
 │   │   ├── [feature-a].md
-│   │   ├── [feature-b].md
-│   │   └── [feature-c].md
-│   │
+│   │   └── [feature-b].md
 │   ├── bugfixes/
-        ├── [nome-do-servico]_index.md
+│   │   ├── bugfixes_index.md
 │   │   ├── [bugfix-a]-[yyyy-mm-dd].md
 │   │   └── [bugfix-b]-[yyyy-mm-dd].md
-│   │
 │   └── backfills/
-        ├── [nome-do-servico]_index.md
+│       ├── backfills_index.md
 │       └── [backfill-a]-[yyyy-mm-dd].md
 │
 ├── 03-frontend/
-│   ├── [nome-do-servico]_index.md
-│   ├── endpoints.md
+│   ├── [nome-do-projeto]-fe_index.md  ← índice do serviço frontend
 │   ├── paleta-cores.md
-│   │
 │   ├── features/
-        ├── [nome-do-servico]_index.md
+│   │   ├── features_index.md
 │   │   ├── [feature-a].md
-│   │   ├── [feature-b].md
-│   │   └── [feature-c].md
-│   │
+│   │   └── [feature-b].md
 │   └── bugfixes/
-        ├── [nome-do-servico]_index.md
-│       ├── [bugfix-a]-[yyyy-mm-dd].md
-│       └── [bugfix-b]-[yyyy-mm-dd].md
+│       ├── bugfixes_index.md
+│       └── [bugfix-a]-[yyyy-mm-dd].md
 │
 └── 04-infrastructure/
-    ├── [nome-do-servico]_index.md
+    ├── infrastructure_index.md
     ├── database/
-    │   ├── [nome-do-servico]_index.md
+    │   ├── database_index.md
     │   ├── schema.md
     │   └── migrations.md
     ├── security/
-    │   ├── [nome-do-servico]_index.md
+    │   ├── security_index.md
     │   └── authentication.md
     └── external-apis/
-        ├── [nome-do-servico]_index.md
+        ├── external-apis_index.md
         └── [api-externa].md
 ```
 
----
-
-### FASE 3: REGRAS DE LINKS
-
-**Regra geral:** cada arquivo linka para seu pai direto, ex: [nome-do-projeto]-index.md é o ponto de entrada PAI, product_index.md é vinculado com o PAI, roadmap.md tem vínculo com product_index.md, features_index.md é vinculado com product_index.md, [feature-a].md e [feature-b].md é vinculado com features_index.md e caso tenham relação ou dependam uma da outra, podem ter relação entre si também. O link é bidirecional. 
-
-**Arquivos folha** (credentials, endpoints, webhooks, errors, features, decisions, schema, migrations, authentication, roadmap):
-- Linkam **somente** para o `[nome-do-servico]_index.md` pai imediato
-- **Não** linkam para `[nome-do-projeto]-index.md`
-- **Só** linkam para arquivos irmãos (mesmo nível) se forem dependentes
-- **Não** linkam para arquivos de outros ramos da hierarquia
-
-**Arquivos `[nome-do-servico]_index.md`:**
-- Linkam para os **filhos diretos** da própria pasta
-- Linkam para o **pai direto** (o `[nome-do-servico]_index.md` um nível acima)
-- O `[nome-do-servico]_index.md` da raiz de cada seção de topo linka para `[nome-do-projeto]-index.md`
-
-**`[nome-do-projeto]-index.md`:**
-- Linka para as seções de topo (`01-product/product_index`, `02-infrastructure/infrastructure_index`)
-- Não tem pai
-
-**PROIBIDO em qualquer arquivo:**
-- Linkar para outro ramo (ex: `features/` linkando para `services/`)
-- Linkar saltando mais de um nível hierárquico
-- Referências cruzadas entre serviços diferentes (ex: `stripe/webhooks.md` linkando para `sendgrid_index.md`)
-- Wikilinks dentro do corpo do texto que violem as regras acima — nesses casos, usar caminho em texto puro (ex: `02-infrastructure/services/servico/arquivo.md`)
+**Regras de nomenclatura:**
+- Índices de pasta usam o nome da pasta: `features_index.md`, `flows_index.md`, `bugfixes_index.md`, `backfills_index.md`, `decisions_index.md`
+- Índices de serviço usam o nome do projeto + sufixo: `[projeto]-be_index.md`, `[projeto]-fe_index.md`
+- Índices de infraestrutura usam o nome da subpasta: `database_index.md`, `security_index.md`, `external-apis_index.md`
+- Bugfixes e backfills sempre terminam com `-[yyyy-mm-dd]`
 
 ---
 
-### FASE 4: FORMATAÇÃO PADRÃO
+### FASE 3 — HIERARQUIA DE LINKS
 
-Todos os arquivos devem seguir este template:
+**Árvore de parentesco:**
 
-```markdown
+```
+[projeto]-index.md
+├── 01-product/product_index.md
+│   ├── roadmap.md
+│   ├── features/features_index.md
+│   │   ├── [feature-a].md
+│   │   └── [feature-b].md
+│   └── decisions/decisions_index.md
+│       ├── adr-001-[tema].md
+│       └── adr-002-[tema].md
+├── 02-backend/[projeto]-be_index.md
+│   ├── credentials.md / endpoints.md / errors.md / spec-legado.md
+│   ├── flows/flows_index.md → [fluxo].md
+│   ├── features/features_index.md → [feature].md
+│   ├── bugfixes/bugfixes_index.md → [bugfix].md
+│   └── backfills/backfills_index.md → [backfill].md
+├── 03-frontend/[projeto]-fe_index.md
+│   ├── paleta-cores.md
+│   ├── features/features_index.md → [feature].md
+│   └── bugfixes/bugfixes_index.md → [bugfix].md
+└── 04-infrastructure/infrastructure_index.md
+    ├── database/database_index.md → schema.md / migrations.md
+    ├── security/security_index.md → authentication.md
+    └── external-apis/external-apis_index.md → [api].md
+```
+
+**Regras:**
+
+- Todo arquivo linka para o **pai imediato** e o pai linka de volta para os filhos diretos — bidirecional.
+- **Arquivos folha** (credentials, endpoints, errors, roadmap, schema, migrations, authentication, features individuais, bugfixes, backfills, fluxos, ADRs): linkam **somente** para o `_index.md` pai imediato. Podem linkar para arquivos **irmãos** (mesma pasta) se houver dependência real.
+- **`_index.md` de pasta** (features_index, flows_index etc.): linka para filhos diretos + para o `_index.md` do serviço pai.
+- **`_index.md` de serviço** ([projeto]-be_index, [projeto]-fe_index, infrastructure_index): linka para `[projeto]-index.md` + para os `_index.md` das subpastas.
+- **`[projeto]-index.md`**: linka para os quatro `_index.md` de seção. Não tem pai.
+- **`[projeto]-doc.md`**: linka apenas para `[projeto]-index.md`. Não é pai de nenhum outro arquivo.
+
+**PROIBIDO:**
+- Saltar mais de um nível hierárquico (ex: feature linkando para `[projeto]-index.md`)
+- Linkar entre ramos diferentes (ex: `02-backend/` linkando para `03-frontend/`)
+- Wikilinks cruzando serviços ou seções — use caminho em texto puro quando precisar referenciar
+
+---
+
+### FASE 4 — FRONTMATTER PADRÃO
+
+Todo arquivo deve ter este frontmatter:
+
+```yaml
 ---
 title: [Título claro e descritivo]
-category: [product | infrastructure | service | service-dependency | database | security | external-api]
-service: [nome do serviço, somente para arquivos dentro de serviços/integrações]
+category: [product | service | infrastructure]
+service: [nome-do-servico]   # apenas para arquivos dentro de 02-backend/ ou 03-frontend/
 status: [stable | draft | deprecated]
 updated: [YYYY-MM-DD]
-parent: "[[caminho/para/o/_index-pai]]"
+parent: "[[caminho/para/_index-pai]]"   # omitir apenas no [projeto]-index.md
 tags:
-  - [categoria principal]
-  - [subcategoria]
-  - [nome do serviço, se aplicável]
-  - [tipo do arquivo: webhooks | credentials | endpoints | errors | payment-flows | roadmap | feature | decision | schema | migrations | security | authentication]
+  - [categoria: product | infrastructure | service]
+  - [nome-do-servico]        # se aplicável
+  - [tipo: feature | bugfix | backfill | flows | credentials | endpoints | errors | schema | migrations | authentication | roadmap | decision | index]
   - [status: stable | draft | deprecated]
 ---
+```
 
+**Regras de tags:**
+- Kebab-case sempre
+- Arquivos do mesmo tipo compartilham a tag de tipo (`feature`, `bugfix`, `flows` etc.)
+- Não criar tags únicas que só aparecem em um arquivo
+
+---
+
+### FASE 5 — TEMPLATES DE CONTEÚDO
+
+**Arquivos folha** (features, bugfixes, backfills, fluxos, ADRs):
+
+```markdown
 # [Título]
 
 ## Contexto
-[Por que esse arquivo existe? Qual problema ou tópico cobre?]
+[Por que existe? Qual problema cobre? Data se relevante.]
 
 ## Conteúdo principal
-[O conteúdo reorganizado e limpo]
+[Informação técnica reorganizada e limpa.]
 
 ## Decisões / Soluções
-[Se aplicável: o que foi decidido ou resolvido e por quê]
+[O que foi decidido ou resolvido e por quê — se aplicável.]
 
 ## Relacionados
-- [[link-para-o-pai]] — [descrição do relacionamento]
+- [[_index-pai]] — [descrição do vínculo]
+- [[arquivo-irmao]] — [descrição] ← só se houver dependência real
 ```
 
-**Regras para tags:**
-- Use sempre kebab-case
-- Toda tag deve ser reutilizável entre arquivos do mesmo tipo
-- Arquivos do mesmo tipo em serviços diferentes compartilham a tag de tipo (ex: todos os `webhooks.md` têm a tag `webhooks`)
-- O `status` da tag é idêntico ao campo `status` do frontmatter
-- Não crie tags únicas que só aparecem em um arquivo
+**Arquivos `_index.md` de pasta** (features_index, flows_index, bugfixes_index, backfills_index, decisions_index):
 
-**Exemplos de conjuntos de tags:**
+```markdown
+# [Seção] — Índice
 
-| Arquivo | Tags |
+## Arquivos deste diretório
+- [[arquivo-a]] — [descrição de uma linha]
+- [[arquivo-b]] — [descrição de uma linha]
+
+## Relacionados
+- [[_index-do-servico-pai]] — índice do serviço
+```
+
+**Arquivos `_index.md` de serviço** ([projeto]-be_index, [projeto]-fe_index):
+
+```markdown
+# [Serviço] — Índice do Serviço
+
+## Contexto
+[O que é o serviço, stack, data de inclusão, status atual.]
+
+## Arquivos do serviço
+- [[credentials]] / [[endpoints]] / [[errors]] — [descrição]
+- [[flows/flows_index]] — [descrição]
+- [[features/features_index]] — [descrição]
+- [[bugfixes/bugfixes_index]] — [descrição]
+- [[backfills/backfills_index]] — [descrição]
+
+## Relacionados
+- [[nome-do-projeto-index]] — raiz do vault
+```
+
+**`infrastructure_index.md`:**
+
+```markdown
+# Infraestrutura — Índice
+
+## Subseções
+- [[database/database_index]] — schema, migrations
+- [[security/security_index]] — autenticação, autorização
+- [[external-apis/external-apis_index]] — APIs externas consumidas
+
+## Relacionados
+- [[nome-do-projeto-index]] — raiz do vault
+- [[nome-do-projeto-be_index]] — serviço que consome esta infraestrutura
+```
+
+**`[projeto]-index.md`:**
+
+```markdown
+# [Projeto] — Índice do Vault
+
+## Contexto
+[O que é o projeto em 2-3 linhas. Stack resumida em tabela.]
+
+| Camada | Tecnologia |
 |---|---|
-| `stripe/webhooks.md` | `infrastructure, service, stripe, webhooks, stable` |
-| `sendgrid/errors.md` | `infrastructure, service, sendgrid, errors, stable` |
-| `roadmap.md` | `product, roadmap, stable` |
-| `features/checkout.md` | `product, feature, stable` |
-| `decisions/adr-001-orm.md` | `product, decision, stable` |
-| `database/schema.md` | `infrastructure, database, schema, stable` |
-| `security/authentication.md` | `infrastructure, security, authentication, stable` |
+| Backend | [...] |
+| Frontend | [...] |
+| Auth | [...] |
+
+## Documentação de leitura
+- [[nome-do-projeto-doc]] — documentação narrativa do projeto
+
+## Seções do vault
+- [[01-product/product_index]] — produto: roadmap, features, decisões
+- [[02-backend/nome-do-projeto-be_index]] — backend: serviço, flows, features, bugfixes
+- [[03-frontend/nome-do-projeto-fe_index]] — frontend: features, paleta, bugfixes
+- [[04-infrastructure/infrastructure_index]] — banco, segurança, APIs externas
+
+## Relacionados
+- (raiz — sem pai)
+```
+
+**`[projeto]-doc.md`:**
+
+```markdown
+# [Projeto] — Documentação do Projeto
+
+> Para navegação técnica, use o [[[projeto]-index]].
 
 ---
 
-### FASE 5: REGRAS DE CONTEÚDO
-
-- **Duplicatas:** mantenha a informação no arquivo mais específico; nos demais, substitua pelo caminho em texto puro
-- **Arquivos com mais de um tema:** divida em arquivos separados
-- **Arquivos sobre o mesmo tema:** consolide em um único arquivo
-- **Nada pode ser perdido:** toda informação técnica deve ser preservada, apenas reorganizada
-- **Linguagem:** direta e objetiva, sem introduções redundantes
-- **`[servico]_index.md`** de cada serviço deve conter: visão geral da integração, data de inclusão no projeto, status atual e lista linkada das dependências daquele serviço
+[Documentação narrativa: o que é o projeto, as decisões principais em prosa,
+arquitetura, contexto histórico. Sem links de navegação do vault — apenas
+a referência ao index acima.]
+```
 
 ---
 
-### FASE 6: ENTREGÁVEIS
+### FASE 6 — REGRAS DE CONTEÚDO
 
-Ao final, entregue:
+- **Duplicatas:** mantenha no arquivo mais específico; substitua nos demais por referência em texto puro
+- **Arquivo com mais de um tema:** divida em arquivos separados
+- **Arquivos sobre o mesmo tema:** consolide em um só
+- **Nada pode ser perdido:** toda informação técnica preservada, apenas reorganizada
+- **Linguagem:** direta, sem introduções redundantes
+- **Informação narrativa vs. técnica:** prosa de contexto/história → `[projeto]-doc.md`; referências técnicas, fluxos, specs → vault estruturado
 
-1. Estrutura de pastas completa em formato de árvore
-2. Conteúdo de cada arquivo reescrito, um por vez, na ordem da hierarquia (de cima para baixo)
+---
+
+### FASE 7 — ENTREGÁVEIS
+
+1. Estrutura de pastas em árvore
+2. Conteúdo de cada arquivo, um por vez, de cima para baixo na hierarquia
 3. Relatório de mudanças:
    - Arquivos criados
-   - Arquivos mesclados (quais foram unificados e onde)
-   - Arquivos removidos (e para onde o conteúdo foi)
-   - Links removidos (motivo: circular, lateral, salto de nível ou cruzamento de ramo)
+   - Arquivos mesclados (quais unificados e onde)
+   - Arquivos removidos (para onde o conteúdo foi)
+   - Links removidos (motivo: circular, lateral, salto de nível, cruzamento de ramo)
 
 ---
 
@@ -226,4 +320,5 @@ Abaixo estão os arquivos do vault. Leia todos antes de responder.
 Comece pela Fase 1: apresente a análise e aguarde aprovação.
 Não gere nenhum arquivo ainda.
 
-[cole aqui o conteúdo dos arquivos ou liste os caminhos]
+[cole aqui o conteúdo dos arquivos, um por vez com o caminho como cabeçalho]
+
