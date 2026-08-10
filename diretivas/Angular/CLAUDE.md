@@ -84,9 +84,3 @@ src/app/
 - Nunca silencie um `catch` vazio. Sempre logue e trate ou relance a exceção.
 - Em serviços HTTP, logue o erro antes de relançar ou mapear para exceção de domínio.
 
----
-
-## Proibido
-- `any` · CSS inline · HTTP em componentes · `ngOnDestroy` manual
-- Importar feature dentro de feature · Lógica de negócio em template
-- Valores estéticos hardcoded fora do tema · `effect()` para layout
