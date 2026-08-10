@@ -63,6 +63,7 @@ Toda feature **deve** implementar as três camadas abaixo. Nenhuma pode ser omit
 **Repositories**
 - Abstraia toda query do TypeORM. Services não usam `EntityManager` diretamente.
 - Crie um repository customizado por entidade quando necessário.
+- Utilizar query Builder com ORM ou mais especificamente Repository Pattern com Query Builder utilizando Fluent Interface do TypeORM — métodos encadeados (.leftJoinAndSelect, .andWhere, .getMany) que constroem a query progressivamente, sem SQL literal.
 
 **Entities**
 - Use decorators TypeORM (`@Entity`, `@Column`, `@ManyToOne` etc.).
@@ -206,5 +207,3 @@ export class OrganizacaoPapel {
 - `synchronize: true` em produção
 - Query sem tipagem
 - Módulo importando outro módulo de feature diretamente
-- Variáveis de ambiente fora de `config/`
-- Exceptions genéricas sem contexto
