@@ -29,6 +29,8 @@ src/
 │       ├── [domain].repository.ts
 │       └── [domain].module.ts
 ├── common/            # Decorators, guards, interceptors, pipes, filtros globais
+│   ├── auth/          # Infraestrutura: Keycloak, cookies, JwtMiddleware
+│   └── viaauth/       # Infraestrutura: cliente ViaAuth, Organização ativa
 ├── config/            # Configurações de ambiente (TypeORM, Fastify, etc.)
 ├── database/          # Migrations, seeds
 └── main.ts
@@ -78,6 +80,10 @@ Toda feature **deve** implementar as três camadas abaixo. Nenhuma pode ser omit
 **Migrations**
 - Toda alteração de schema via migration. Nunca use `synchronize: true` em produção.
 - Nomenclatura: `{timestamp}-{ação}-{tabela}` (ex: `1700000000000-add-status-to-orders`).
+
+**Brain**
+- A cada modificação substantiva no código, atualize o brain com as modificações feitas na sessão.
+- path: (C:\Users\User\Desktop\NOME-DO-PROJETO\brain)
 
 ---
 
@@ -172,6 +178,7 @@ export class OrganizacaoPapel {
 
 - Cada domínio é um `@Module()` isolado.
 - Exporte apenas o que outros módulos precisam consumir.
+- Módulos de infraestrutura (`common/auth`, `common/viaauth`) não são features: qualquer módulo de `modules/` pode importá-los. Eles nunca importam módulos de `modules/`.
 - `ConfigModule` e `TypeOrmModule` configurados no `AppModule` via `forRoot`.
 - Features usam `TypeOrmModule.forFeature([Entidade])` no próprio módulo.
 
