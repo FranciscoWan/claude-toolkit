@@ -9,7 +9,7 @@
 ---
 
 ## Stack
-- **Framework:** Angular 17+ (Standalone Components, signals, lazy loading)
+- **Framework:** Angular 22 (Standalone Components, signals, lazy loading, debounce, signal forms)
 - **Estilos:** Tailwind CSS — utilitários apenas, mobile-first, sem CSS inline
 - **Tema:** arquivo `theme` → `tailwind.config` — fonte única de cor, fonte e espaçamento
 - **Tipagem:** TypeScript strict, sem `any`, interfaces para objetos, enums para domínio
